@@ -9,33 +9,57 @@ __version__ = "1.0.1"
 __email__ = "sergey@csb-mirena.ru"
 
 
+def print_color(arg):
+    format_color = {
+        'NOT_NUM': '\033[51;3;33;43m',
+        'WHITESPACE': '\033[38;5;236m',
+        'LINE_EVEN': '\033[51;3;43;97;7;9m',
+        'LINE_ODD': '\033[52;3;43;97;7;9m',
+        'NUM_EVEN': '\033[51;3;43;97;7m',
+        'NUM_ODD': '\033[52;3;43;97;7m',
+        'KEG': '\033[51;3;43;97m',
+        'END': '\033[0m',
+    }
+    return format_color[arg]
+
+
+NOT_NUM = print_color('NOT_NUM')
+WHITESPACE = print_color('WHITESPACE')
+LINE_EVEN = print_color('LINE_EVEN')
+LINE_ODD = print_color('LINE_ODD')
+NUM_EVEN = print_color('NUM_EVEN')
+NUM_ODD = print_color('NUM_ODD')
+KEG = print_color('KEG')
+END = print_color('END')
+
+
 def null_cell(text):
-    return f'\033[51;3;33;43m{text:^4}\033[0m'
+    return NOT_NUM + f'{text:^4}' + END
 
 
 def whitespace_cell(text):
-    return f'\033[38;5;236m{text:^4}\033[0m'
+    return WHITESPACE + f'{text:^4}' + END
 
 
 def header(text):
-    return f'\033[51;3;43;97;7m{" " + text:<36}\033[0m'
+    return NUM_EVEN + f'{" " + text:<36}' + END
 
 
 def num_cell(text, item, data):
     if item % 2 == 0:
         if text in data:
-            return f'\033[51;3;43;97;7m {text:^3}\033[0m'
+            return NUM_EVEN + f' {text:^3}' + END
         else:
-            return f'\033[51;3;43;97;7;9m {text:^3}\033[0m'
+            return LINE_EVEN + f' {text:^3}' + END
     else:
         if text in data:
-            return f'\033[52;3;43;97;7m {text:^3}\033[0m'
+            return NUM_ODD + f' {text:^3}' + END
         else:
-            return f'\033[52;3;43;97;7;9m {text:^3}\033[0m'
+            return LINE_ODD + f' {text:^3}' + END
 
 
 def kegs(keg):
-    return f'\033[51;3;43;97m {keg:^3}\033[0m'
+    return KEG + f' {keg:^3}' + END
 
 
 class LottoCard:
@@ -115,7 +139,7 @@ class LottoCard:
 
     @property
     def card(self):
-        card = [el for i in self.__card[1:-1] for el in i if str(el).isdigit()]
+        card = [el for i in self.__card[1:-1] for el in i if el]
         return card
 
 
